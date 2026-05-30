@@ -1,0 +1,16 @@
+apiVersion: storage.vastai.m.crossplane.io/v1alpha1
+kind: Volume
+metadata:
+  name: dataset-cache
+  namespace: default
+spec:
+  forProvider:
+    # offerId is the numeric id of a volume offer from `vastai search volumes`.
+    offerId: 9988
+    # Size in GB.
+    size: 500
+    name: dataset-cache
+    disableCompression: false
+    # cloneFromId: 1234   # optional: clone an existing volume
+  providerConfigRef:
+    name: default

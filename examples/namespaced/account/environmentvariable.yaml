@@ -1,0 +1,33 @@
+# EnvironmentVariable: REDIS_PASSWORD (namespaced flavour)
+#
+# The Vast.ai TF provider marks the `value` field as Sensitive, so upjet
+# generates `valueSecretRef` on the CRD instead of plain `value`. For
+# namespaced ManagedResources the Secret must live in the same namespace as
+# the MR, so `valueSecretRef` here does not take a namespace.
+#
+# Apply order matters: the Secret must exist before the EnvironmentVariable
+# is reconciled, otherwise the controller will report a missing-secret error.
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vastai-redis-password
+  namespace: default
+type: Opaque
+stringData:
+  # Generate with:  openssl rand -base64 32
+  password: "REPLACE_WITH_STRONG_PASSWORD"
+---
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: EnvironmentVariable
+metadata:
+  name: redis-password
+  namespace: default
+spec:
+  forProvider:
+    key: REDIS_PASSWORD
+    valueSecretRef:
+      name: vastai-redis-password
+      key: password
+  providerConfigRef:
+    name: default

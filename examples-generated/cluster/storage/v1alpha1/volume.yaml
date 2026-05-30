@@ -1,0 +1,13 @@
+apiVersion: storage.vastai.crossplane.io/v1alpha1
+kind: Volume
+metadata:
+  annotations:
+    meta.upbound.io/example-id: storage/v1alpha1/volume
+  labels:
+    testing.upbound.io/example-name: dataset
+  name: dataset
+spec:
+  forProvider:
+    name: training-dataset
+    offerId: ${data.vastai_volume_offers.storage.most_affordable.id}
+    size: 100

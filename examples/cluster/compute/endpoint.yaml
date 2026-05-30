@@ -1,0 +1,20 @@
+apiVersion: compute.vastai.crossplane.io/v1alpha1
+kind: Endpoint
+metadata:
+  name: llm-inference
+spec:
+  forProvider:
+    endpointName: llm-inference
+    # Autoscaler tuning (see Vast.ai autoscaler docs):
+    # minLoad   - threshold below which workers are not added
+    # targetUtil- target utilisation per worker
+    # coldMult  - multiplier for cold workers vs hot
+    minLoad: 0.5
+    minColdLoad: 0.1
+    targetUtil: 0.75
+    coldMult: 1.5
+    coldWorkers: 1
+    maxWorkers: 8
+    endpointState: "running"
+  providerConfigRef:
+    name: default

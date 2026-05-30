@@ -1,0 +1,11 @@
+apiVersion: network.vastai.m.crossplane.io/v1alpha1
+kind: OverlayMember
+metadata:
+  name: training-overlay-instance-77
+  namespace: default
+spec:
+  forProvider:
+    overlayName: training-overlay
+    instanceId: "77"
+  providerConfigRef:
+    name: default

@@ -1,0 +1,571 @@
+name: realnedsanders/vastai
+resources:
+    vastai_api_key:
+        subCategory: Account
+        description: Manages a Vast.ai API key.
+        name: vastai_api_key
+        title: vastai_api_key Resource - terraform-provider-vastai
+        examples:
+            - name: ci_deploy
+              manifest: |-
+                {
+                  "name": "ci-deploy-key",
+                  "permissions": "${jsonencode({\n    \"instances\" : \"full\",\n    \"ssh_keys\" : \"read\",\n    \"templates\" : \"read\"\n  })}"
+                }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            created_at: (String) Timestamp when the API key was created.
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) Unique numeric identifier of the API key.
+            key: (String, Sensitive) The API key value. Only available on creation, never returned by subsequent reads. The key value cannot be recovered after creation.
+            name: (String) Name of the API key. Changing this forces a new resource.
+            permissions: (String) JSON string of permission configuration. Changing this forces a new resource.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_api_key.example 12345
+    vastai_cluster:
+        subCategory: Networking
+        description: Manages a Vast.ai cluster.
+        name: vastai_cluster
+        title: vastai_cluster Resource - terraform-provider-vastai
+        examples:
+            - name: gpu_cluster
+              manifest: |-
+                {
+                  "manager_id": "12345",
+                  "subnet": "10.0.0.0/24"
+                }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) Unique numeric identifier of the cluster.
+            manager_id: (String) Machine ID to be the cluster manager. This is a creation-time attribute; on read it is populated from the cluster's node list if available, otherwise preserved in state via UseStateForUnknown.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            subnet: (String) Subnet for the cluster (e.g., 10.0.0.0/24).
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_cluster.example 12345
+    vastai_cluster_member:
+        subCategory: Networking
+        description: Manages membership of a machine in a Vast.ai cluster.
+        name: vastai_cluster_member
+        title: vastai_cluster_member Resource - terraform-provider-vastai
+        examples:
+            - name: worker_node
+              manifest: |-
+                {
+                  "cluster_id": "${vastai_cluster.gpu_cluster.id}",
+                  "machine_id": "67890"
+                }
+              references:
+                cluster_id: vastai_cluster.gpu_cluster.id
+              dependencies:
+                vastai_cluster.gpu_cluster: |-
+                    {
+                      "name": "training-cluster"
+                    }
+        argumentDocs:
+            cluster_id: (String) ID of the cluster to join.
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: '(String) Composite ID: cluster_id/machine_id.'
+            is_cluster_manager: (Boolean) Whether this machine is the cluster manager.
+            local_ip: (String) Local IP address of the machine within the cluster network.
+            machine_id: (String) ID of the machine to add to the cluster.
+            new_manager_id: (String) If removing the cluster manager, specify the new manager machine ID. Only used during destroy.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_cluster_member.example 123/456
+    vastai_endpoint:
+        subCategory: Serverless
+        description: Manages a Vast.ai serverless endpoint.
+        name: vastai_endpoint
+        title: vastai_endpoint Resource - terraform-provider-vastai
+        examples:
+            - name: llm_serving
+              manifest: |-
+                {
+                  "cold_mult": 2,
+                  "cold_workers": 3,
+                  "endpoint_name": "llm-inference-v1",
+                  "max_workers": 10,
+                  "min_load": 0,
+                  "target_util": 0.85
+                }
+        argumentDocs:
+            cold_mult: '(Number) Cold capacity as multiple of hot capacity (default: 2.5).'
+            cold_workers: '(Number) Minimum cold workers when no load (default: 5).'
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            endpoint_name: (String) Name of the serverless endpoint.
+            endpoint_state: (String) Endpoint runtime state (active, suspended, stopped). New endpoints start as active.
+            id: (String) Endpoint ID. Used as the primary identifier for reads, updates, deletes, and imports.
+            max_workers: '(Number) Maximum workers the endpoint can have (default: 20).'
+            min_cold_load: '(Number) Minimum floor load allowing cold workers (default: 0).'
+            min_load: '(Number) Minimum floor load in perf units/s (default: 0).'
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            target_util: '(Number) Target capacity utilization fraction (default: 0.9).'
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+        importStatements:
+            - terraform import vastai_endpoint.example 12345
+    vastai_environment_variable:
+        subCategory: Account
+        description: Manages a Vast.ai environment variable.
+        name: vastai_environment_variable
+        title: vastai_environment_variable Resource - terraform-provider-vastai
+        examples:
+            - name: hf_token
+              manifest: |-
+                {
+                  "key": "HF_TOKEN",
+                  "value": "${var.huggingface_token}"
+                }
+              references:
+                value: var.huggingface_token
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) The environment variable name (same as key). Used as the unique identifier.
+            key: (String) Environment variable name. Changing this forces a new resource.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            value: (String, Sensitive) Environment variable value.
+        importStatements:
+            - terraform import vastai_environment_variable.example HF_TOKEN
+    vastai_instance:
+        subCategory: Compute
+        description: Manages a Vast.ai GPU instance.
+        name: vastai_instance
+        title: vastai_instance Resource - terraform-provider-vastai
+        examples:
+            - name: training
+              manifest: |-
+                {
+                  "disk_gb": 50,
+                  "env": {
+                    "PROJECT_NAME": "my-experiment",
+                    "WANDB_API_KEY": "your-wandb-key"
+                  },
+                  "image": "pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime",
+                  "label": "ml-training-run",
+                  "offer_id": "${data.vastai_gpu_offers.rtx4090.most_affordable.id}",
+                  "onstart": "cd /workspace \u0026\u0026 pip install -r requirements.txt",
+                  "ssh_key_ids": [
+                    "${vastai_ssh_key.my_key.id}"
+                  ]
+                }
+              references:
+                offer_id: data.vastai_gpu_offers.rtx4090.most_affordable.id
+                ssh_key_ids: vastai_ssh_key.my_key.id
+              dependencies:
+                vastai_ssh_key.my_key: |-
+                    {
+                      "ssh_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample user@workstation"
+                    }
+        argumentDocs:
+            actual_status: (String) Current actual status of the instance as reported by the API (e.g., 'running', 'loading', 'exited').
+            bid_price: (Number) Bid price per GPU per hour in USD. Set to create an interruptible (spot) instance. Omit for on-demand pricing. The bid amount can be updated in-place, but removing bid pricing entirely (switching from spot to on-demand) requires instance replacement.
+            cancel_unavail: (Boolean) Cancel instance creation if the selected offer becomes unavailable. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            cost_per_hour: (Number) Current cost per hour in USD for this instance.
+            cpu_cores: (Number) Number of effective CPU cores allocated to this instance.
+            cpu_ram_gb: (Number) Total CPU RAM in GB.
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            created_at: (String) Timestamp when the instance was created.
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            disk_gb: (Number) Local disk partition size in GB. Cannot be changed after creation. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            env: (Map of String) Environment variables as key-value pairs passed to the instance container. Can be updated via template update. Not returned by the API; preserved in state via UseStateForUnknown.
+            geolocation: (String) Geographic location of the host machine.
+            gpu_name: (String) GPU model name (e.g., 'RTX 4090', 'A100 SXM4').
+            gpu_ram_gb: (Number) Total GPU VRAM in GB.
+            id: (String) Unique contract ID of the instance. Used as the primary identifier for all operations.
+            image: '(String) Docker image to launch (e.g., ''pytorch/pytorch:latest''). Can be set via template. If not specified, the template''s image is used. Note: the API may return an image UUID instead of the original docker reference; the state value is preserved from config when possible.'
+            image_login: '(String, Sensitive) Docker registry credentials for private image pulls (format: ''-u user -p pass registry''). This value is sensitive and will not be displayed in plan output. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.'
+            inet_down_mbps: (Number) Internet download speed in Mbps.
+            inet_up_mbps: (Number) Internet upload speed in Mbps.
+            is_bid: (Boolean) Whether this instance uses bid (spot/interruptible) pricing.
+            label: (String) Human-readable label for the instance. Can be updated in-place.
+            machine_id: (Number) Physical machine ID hosting this instance.
+            num_gpus: (Number) Number of GPUs allocated to this instance.
+            offer_id: (Number) ID of the GPU offer to create this instance from. Obtain from the vastai_gpu_offers data source. Changing this forces a new resource. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            onstart: (String) Startup script executed when the instance boots. Can be updated via template update.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            reliability: (Number) Host machine reliability score (0.0 to 1.0).
+            ssh_host: (String) SSH connection hostname for this instance.
+            ssh_key_ids: (Set of String) Set of SSH key IDs to attach to this instance. Keys are attached/detached incrementally when the set changes. Use IDs from vastai_ssh_key resources. Not returned by the API; preserved in state via UseStateForUnknown.
+            ssh_port: (Number) SSH connection port for this instance.
+            status: (String) Desired instance state. Set to 'running' or 'stopped' to start/stop the instance without destroying and recreating it. Defaults to 'running' on creation.
+            status_msg: (String) Current status message from the instance (e.g., progress information during loading).
+            template_hash_id: (String) Hash ID of a Vast.ai template to apply to this instance. Can be updated in-place.
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            use_jupyter_lab: (Boolean) Enable JupyterLab access to this instance. Defaults to the template setting if not specified. This is a creation-time attribute not returned by the API.
+            use_ssh: (Boolean) Enable SSH access to this instance. Defaults to the template setting if not specified. This is a creation-time attribute not returned by the API.
+        importStatements:
+            - terraform import vastai_instance.example 123456
+    vastai_network_volume:
+        subCategory: Storage
+        description: Manages a Vast.ai network volume.
+        name: vastai_network_volume
+        title: vastai_network_volume Resource - terraform-provider-vastai
+        examples:
+            - name: shared_data
+              manifest: |-
+                {
+                  "name": "shared-model-weights",
+                  "offer_id": "${data.vastai_network_volume_offers.nv_offers.most_affordable.id}",
+                  "size": 200
+                }
+              references:
+                offer_id: data.vastai_network_volume_offers.nv_offers.most_affordable.id
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            disk_name: (String) Name of the physical disk hosting this network volume.
+            disk_space: (Number) Actual allocated disk space in GB.
+            driver_version: (String) Driver version on the host machine.
+            geolocation: (String) Geographic location of the machine hosting this network volume.
+            host_id: (Number) ID of the host machine.
+            id: (String) Volume contract ID. Used as the primary identifier for reads, deletes, and imports.
+            inet_down: (Number) Internet download speed in Mbps.
+            inet_up: (Number) Internet upload speed in Mbps.
+            machine_id: (Number) ID of the machine hosting this network volume.
+            name: (String) Optional name/label for the network volume. Changes force replacement.
+            offer_id: (Number) ID of the network volume offer to create from (from vastai_network_volume_offers data source). Changes force replacement. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            reliability: (Number) Host reliability score (0.0 to 1.0).
+            size: (Number) Network volume size in GB. Changes force replacement. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            status: (String) Current status of the network volume (e.g., 'active', 'inactive').
+            timeouts: (Block, Optional) (see below for nested schema)
+            verification: (String) Host verification status.
+        importStatements:
+            - terraform import vastai_network_volume.example 12345
+    vastai_overlay:
+        subCategory: Networking
+        description: Manages a Vast.ai overlay network.
+        name: vastai_overlay
+        title: vastai_overlay Resource - terraform-provider-vastai
+        examples:
+            - name: training_net
+              manifest: |-
+                {
+                  "cluster_id": "${vastai_cluster.gpu_cluster.id}",
+                  "name": "training-overlay"
+                }
+              references:
+                cluster_id: vastai_cluster.gpu_cluster.id
+              dependencies:
+                vastai_cluster.gpu_cluster: |-
+                    {
+                      "name": "training-cluster"
+                    }
+        argumentDocs:
+            cluster_id: (String) ID of the cluster this overlay belongs to.
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) Unique numeric identifier of the overlay.
+            internal_subnet: (String) Subnet assigned to the overlay.
+            name: (String) Name of the overlay network.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_overlay.example 12345
+    vastai_overlay_member:
+        subCategory: Networking
+        description: Joins an instance to a Vast.ai overlay network.
+        name: vastai_overlay_member
+        title: vastai_overlay_member Resource - terraform-provider-vastai
+        examples:
+            - name: training_instance
+              manifest: |-
+                {
+                  "instance_id": "${vastai_instance.training.id}",
+                  "overlay_name": "${vastai_overlay.training_net.name}"
+                }
+              references:
+                instance_id: vastai_instance.training.id
+                overlay_name: vastai_overlay.training_net.name
+              dependencies:
+                vastai_cluster.gpu_cluster: |-
+                    {
+                      "name": "training-cluster"
+                    }
+                vastai_instance.training: |-
+                    {
+                      "disk_gb": 20,
+                      "image": "pytorch/pytorch:latest",
+                      "offer_id": "${data.vastai_gpu_offers.cheapest.offers[0].id}"
+                    }
+                vastai_overlay.training_net: |-
+                    {
+                      "cluster_id": "${vastai_cluster.gpu_cluster.id}",
+                      "name": "training-overlay"
+                    }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: '(String) Composite ID: overlay_id/instance_id.'
+            instance_id: (String) ID of the instance to join to the overlay.
+            overlay_id: (String) ID of the overlay.
+            overlay_name: (String) Name of the overlay to join.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_overlay_member.example 123/456
+    vastai_ssh_key:
+        subCategory: Compute
+        description: Manages a Vast.ai SSH key.
+        name: vastai_ssh_key
+        title: vastai_ssh_key Resource - terraform-provider-vastai
+        examples:
+            - name: deploy_key
+              manifest: |-
+                {
+                  "ssh_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxYEL5G7fH5KdDpqcMdEhwowkPsGQPha3sQvJbp3kXD deploy@ci"
+                }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            created_at: (String) Timestamp when the SSH key was created.
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) Unique numeric identifier of the SSH key.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            ssh_key: (String, Sensitive) SSH public key content (e.g., 'ssh-rsa AAAA...'). Sensitive value.
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+        importStatements:
+            - terraform import vastai_ssh_key.example 12345
+    vastai_subaccount:
+        subCategory: Account
+        description: Manages a Vast.ai subaccount.
+        name: vastai_subaccount
+        title: vastai_subaccount Resource - terraform-provider-vastai
+        examples:
+            - name: research_team
+              manifest: |-
+                {
+                  "email": "research@example.com",
+                  "password": "${var.subaccount_password}",
+                  "username": "research-team"
+                }
+              references:
+                password: var.subaccount_password
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            email: (String) Email address for the subaccount. Changing this forces a new resource.
+            host_only: (Boolean) Whether this is a host-only subaccount. Changing this forces a new resource.
+            id: (String) Unique numeric identifier of the subaccount.
+            password: '(String, Sensitive) Password for the subaccount. Write-only, never returned by API. Changing this forces a new resource. Note: after import, this field will be empty in state since the API does not return passwords.'
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+            username: (String) Username for the subaccount. Changing this forces a new resource.
+        importStatements:
+            - terraform import vastai_subaccount.example 12345
+    vastai_team:
+        subCategory: Team
+        description: Manages a Vast.ai team.
+        name: vastai_team
+        title: vastai_team Resource - terraform-provider-vastai
+        examples:
+            - name: ml_engineering
+              manifest: |-
+                {
+                  "team_name": "ml-engineering"
+                }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) Unique numeric identifier of the team.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            team_name: (String) Name of the team. Changing this forces creation of a new team. This is a creation-time attribute not returned by the read API; preserved in state via UseStateForUnknown.
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_team.example 12345
+    vastai_team_member:
+        subCategory: Team
+        description: Manages a Vast.ai team member.
+        name: vastai_team_member
+        title: vastai_team_member Resource - terraform-provider-vastai
+        examples:
+            - name: alice
+              manifest: |-
+                {
+                  "email": "alice@example.com",
+                  "role": "${vastai_team_role.developer.name}"
+                }
+              references:
+                role: vastai_team_role.developer.name
+              dependencies:
+                vastai_team_role.developer: |-
+                    {
+                      "name": "developer",
+                      "permissions": [
+                        "view_instances",
+                        "create_instances"
+                      ]
+                    }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            email: (String) Email address to invite. Changing this requires removing and re-inviting the member.
+            id: (String) Member ID assigned by Vast.ai.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            role: (String) Role name to assign to the member. Must match an existing team role. Changing the role requires removing and re-inviting the member.
+            timeouts: (Block, Optional) (see below for nested schema)
+        importStatements:
+            - terraform import vastai_team_member.example 12345
+    vastai_team_role:
+        subCategory: Team
+        description: Manages a Vast.ai team role.
+        name: vastai_team_role
+        title: vastai_team_role Resource - terraform-provider-vastai
+        examples:
+            - name: developer
+              manifest: |-
+                {
+                  "name": "developer",
+                  "permissions": "${jsonencode({\n    \"api\" = {\n      \"instance_read\"  = {}\n      \"instance_write\" = {}\n      \"template_read\"  = {}\n      \"ssh_key_read\"   = {}\n    }\n  })}"
+                }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            id: (String) Numeric ID of the role (used for updates).
+            name: (String) Role name (used for read/delete operations).
+            permissions: (String) JSON string of permission configuration. The API uses nested JSON objects (e.g., {"api":{"instance_read":{...}}}), not a flat string set.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+        importStatements:
+            - terraform import vastai_team_role.example 12345
+    vastai_template:
+        subCategory: Compute
+        description: Manages a Vast.ai template.
+        name: vastai_template
+        title: vastai_template Resource - terraform-provider-vastai
+        examples:
+            - name: pytorch_training
+              manifest: |-
+                {
+                  "env": "{\"PYTHONUNBUFFERED\": \"1\", \"CUDA_VISIBLE_DEVICES\": \"all\"}",
+                  "image": "pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime",
+                  "name": "pytorch-training-template",
+                  "onstart": "pip install wandb tensorboard \u0026\u0026 cd /workspace",
+                  "private": false,
+                  "readme": "PyTorch training template with SSH and JupyterLab access.",
+                  "readme_visible": true,
+                  "ssh_direct": true,
+                  "use_jupyter_lab": true,
+                  "use_ssh": true
+                }
+        argumentDocs:
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            created_at: (String) Timestamp when the template was created (set by the API).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            desc: (String) Short description of the template.
+            docker_login_repo: (String, Sensitive) Private Docker registry URL for authenticated image pulls. This value is sensitive and will not be displayed in plan output.
+            env: (String) Environment variables and port mappings in Docker CLI format (e.g., '-e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+            hash_id: (String) Content-addressed template hash ID. Changes when template content is updated.
+            href: (String) External URL associated with the template (e.g., documentation or project page). May be auto-populated from Docker image metadata.
+            id: (String) Numeric template ID (stable across updates).
+            image: (String) Docker image reference (e.g., 'pytorch/pytorch:latest', 'nvidia/cuda:12.0-devel'). Must be a valid Docker image reference.
+            jup_direct: (Boolean) Enable direct Jupyter access to instances created from this template.
+            jupyter_dir: (String) Working directory for Jupyter when the instance starts.
+            name: (String) Template name. Must be between 1 and 200 characters.
+            numeric_id: (Number) Numeric template ID assigned by the Vast.ai API (same as id, typed as integer).
+            onstart: (String) Bash script to run when the instance starts. Executed after the container is initialized.
+            private: '(Boolean) Whether this template is private (only visible to the owner). Default: false.'
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            readme: (String) Markdown readme content displayed on the template listing page.
+            readme_visible: (Boolean) Whether the readme is visible on the template listing.
+            recommended_disk_space: (String) Recommended disk space for instances using this template (e.g., '50GB').
+            repo: (String) Source code repository URL for the template. May be auto-populated from Docker image metadata.
+            ssh_direct: (Boolean) Enable direct SSH access to instances created from this template.
+            tag: (String) Docker image tag. If not set, the API may assign a default based on the image reference.
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            use_jupyter_lab: (Boolean) Use JupyterLab instead of classic Jupyter Notebook interface.
+            use_ssh: (Boolean) Enable SSH server in instances created from this template.
+        importStatements:
+            - terraform import vastai_template.example 12345
+    vastai_volume:
+        subCategory: Storage
+        description: Manages a Vast.ai local volume.
+        name: vastai_volume
+        title: vastai_volume Resource - terraform-provider-vastai
+        examples:
+            - name: dataset
+              manifest: |-
+                {
+                  "name": "training-dataset",
+                  "offer_id": "${data.vastai_volume_offers.storage.most_affordable.id}",
+                  "size": 100
+                }
+              references:
+                offer_id: data.vastai_volume_offers.storage.most_affordable.id
+        argumentDocs:
+            clone_from_id: (Number) Source volume ID to clone from. When set, creates by cloning (POST /volumes/copy/) instead of creating from offer. Changes force replacement.
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            disable_compression: (Boolean) Disable compression during clone. Only used when clone_from_id is set. Changes force replacement.
+            disk_name: (String) Name of the physical disk hosting this volume.
+            disk_space: (Number) Actual allocated disk space in GB.
+            driver_version: (String) Driver version on the host machine.
+            geolocation: (String) Geographic location of the machine hosting this volume.
+            host_id: (Number) ID of the host machine.
+            id: (String) Volume contract ID. Used as the primary identifier for reads, deletes, and imports.
+            inet_down: (Number) Internet download speed in Mbps.
+            inet_up: (Number) Internet upload speed in Mbps.
+            machine_id: (Number) ID of the machine hosting this volume.
+            name: (String) Optional name/label for the volume. Changes force replacement.
+            offer_id: (Number) ID of the volume offer to create from (from vastai_volume_offers data source). When cloning, this is the destination offer ID. Changes force replacement. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            reliability: (Number) Host reliability score (0.0 to 1.0).
+            size: (Number) Volume size in GB. Changes force replacement. This is a creation-time attribute not returned by the API; preserved in state via UseStateForUnknown.
+            status: (String) Current status of the volume (e.g., 'active', 'inactive').
+            timeouts: (Block, Optional) (see below for nested schema)
+            verification: (String) Host verification status.
+        importStatements:
+            - terraform import vastai_volume.example 12345
+    vastai_worker_group:
+        subCategory: Serverless
+        description: Manages a Vast.ai worker group.
+        name: vastai_worker_group
+        title: vastai_worker_group Resource - terraform-provider-vastai
+        examples:
+            - name: llm_workers
+              manifest: |-
+                {
+                  "endpoint_id": "${vastai_endpoint.llm_serving.id}",
+                  "gpu_ram": 24,
+                  "search_params": "gpu_ram\u003e=24 num_gpus=1 gpu_name=RTX_4090",
+                  "template_hash": "abc123def456",
+                  "test_workers": 3
+                }
+              references:
+                endpoint_id: vastai_endpoint.llm_serving.id
+              dependencies:
+                vastai_endpoint.llm_serving: |-
+                    {
+                      "endpoint_name": "llm-inference"
+                    }
+        argumentDocs:
+            cold_workers: (Number) Minimum cold workers for this worker group.
+            create: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+            delete: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is only applicable if changes are saved into state before the destroy operation occurs.
+            endpoint_id: (Number) ID of the parent endpoint this worker group belongs to. Changing this forces a new resource.
+            endpoint_name: (String) Name of the parent endpoint (computed from endpoint_id if not set).
+            gpu_ram: (Number) Estimated GPU RAM requirement in GB.
+            id: (String) Worker group ID. Used as the primary identifier for reads, updates, deletes, and imports.
+            launch_args: (String) Instance launch arguments string.
+            read: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or planning operation when refresh is enabled.
+            search_params: (String) Offer search filter string (e.g. 'gpu_ram>=23 num_gpus=2 gpu_name=RTX_4090'). The API may apply default filters (verified=True rentable=True rented=False).
+            template_hash: (String) Template hash for worker instances. Either template_hash or template_id must be provided.
+            template_id: (Number) Numeric template ID for worker instances. Either template_hash or template_id must be provided.
+            test_workers: '(Number) Number of workers for initial performance estimate (default: 3).'
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String) A string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+        importStatements:
+            - terraform import vastai_worker_group.example 12345

@@ -1,0 +1,12 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: TeamRole
+metadata:
+  name: instance-operator
+  namespace: default
+spec:
+  forProvider:
+    name: instance-operator
+    # Comma-separated permissions granted by this role.
+    permissions: "instance,ssh_key,environment_variable"
+  providerConfigRef:
+    name: default

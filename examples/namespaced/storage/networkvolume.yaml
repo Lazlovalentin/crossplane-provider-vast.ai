@@ -1,0 +1,12 @@
+apiVersion: storage.vastai.m.crossplane.io/v1alpha1
+kind: NetworkVolume
+metadata:
+  name: shared-checkpoints
+  namespace: default
+spec:
+  forProvider:
+    offerId: 77001
+    size: 1000
+    name: shared-checkpoints
+  providerConfigRef:
+    name: default

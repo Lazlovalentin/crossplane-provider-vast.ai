@@ -1,0 +1,16 @@
+apiVersion: compute.vastai.crossplane.io/v1alpha1
+kind: Endpoint
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/endpoint
+  labels:
+    testing.upbound.io/example-name: llm_serving
+  name: llm-serving
+spec:
+  forProvider:
+    coldMult: 2
+    coldWorkers: 3
+    endpointName: llm-inference-v1
+    maxWorkers: 10
+    minLoad: 0
+    targetUtil: 0.85

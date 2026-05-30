@@ -1,0 +1,14 @@
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  name: training-cluster
+  namespace: default
+spec:
+  forProvider:
+    # Private subnet used by the cluster overlay. Must not overlap with
+    # other clusters or overlays you peer with.
+    subnet: "10.42.0.0/16"
+    # Optionally pin a specific instance as the cluster manager.
+    # managerId: "987654"
+  providerConfigRef:
+    name: default

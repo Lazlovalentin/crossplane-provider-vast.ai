@@ -1,0 +1,13 @@
+apiVersion: storage.vastai.crossplane.io/v1alpha1
+kind: NetworkVolume
+metadata:
+  annotations:
+    meta.upbound.io/example-id: storage/v1alpha1/networkvolume
+  labels:
+    testing.upbound.io/example-name: shared_data
+  name: shared-data
+spec:
+  forProvider:
+    name: shared-model-weights
+    offerId: ${data.vastai_network_volume_offers.nv_offers.most_affordable.id}
+    size: 200

@@ -1,0 +1,20 @@
+apiVersion: account.vastai.crossplane.io/v1alpha1
+kind: TeamRole
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/teamrole
+  labels:
+    testing.upbound.io/example-name: developer
+  name: developer
+spec:
+  forProvider:
+    name: developer
+    permissions: |-
+      ${jsonencode({
+          "api" = {
+            "instance_read"  = {}
+            "instance_write" = {}
+            "template_read"  = {}
+            "ssh_key_read"   = {}
+          }
+        })}

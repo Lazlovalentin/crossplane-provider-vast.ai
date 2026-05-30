@@ -1,0 +1,33 @@
+# EnvironmentVariable: REDIS_PASSWORD
+#
+# The Vast.ai TF provider marks the `value` field as Sensitive, so upjet
+# generates `valueSecretRef` on the CRD instead of plain `value`. The actual
+# password is stored in a Kubernetes Secret and read at reconcile time — it
+# never appears in the MR YAML or in cluster state for this object.
+#
+# Apply order matters: the Secret must exist before the EnvironmentVariable
+# is reconciled, otherwise the controller will report a missing-secret error.
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vastai-redis-password
+  namespace: crossplane-system
+type: Opaque
+stringData:
+  # Generate with:  openssl rand -base64 32
+  password: "REPLACE_WITH_STRONG_PASSWORD"
+---
+apiVersion: account.vastai.crossplane.io/v1alpha1
+kind: EnvironmentVariable
+metadata:
+  name: redis-password
+spec:
+  forProvider:
+    key: REDIS_PASSWORD
+    valueSecretRef:
+      name: vastai-redis-password
+      namespace: crossplane-system
+      key: password
+  providerConfigRef:
+    name: default

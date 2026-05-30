@@ -1,0 +1,16 @@
+apiVersion: account.vastai.crossplane.io/v1alpha1
+kind: Subaccount
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/subaccount
+  labels:
+    testing.upbound.io/example-name: research_team
+  name: research-team
+spec:
+  forProvider:
+    email: research@example.com
+    passwordSecretRef:
+      key: example-key
+      name: example-secret
+      namespace: upbound-system
+    username: research-team

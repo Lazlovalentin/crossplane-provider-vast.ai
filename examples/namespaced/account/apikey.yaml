@@ -1,0 +1,15 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: APIKey
+metadata:
+  name: ci-bot
+  namespace: default
+spec:
+  forProvider:
+    name: ci-bot
+    # Comma-separated permission scopes. Common values: instance, billing,
+    # ssh_key. Refer to Vast.ai API docs for the full list.
+    permissions: "instance,ssh_key"
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: ci-bot-api-key

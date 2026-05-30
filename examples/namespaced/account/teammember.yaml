@@ -1,0 +1,12 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: TeamMember
+metadata:
+  name: alice-on-platform
+  namespace: default
+spec:
+  forProvider:
+    email: alice@example.com
+    # Role name created via TeamRole, or one of the Vast.ai built-in role names.
+    role: instance-operator
+  providerConfigRef:
+    name: default

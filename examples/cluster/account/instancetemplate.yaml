@@ -1,0 +1,26 @@
+apiVersion: account.vastai.crossplane.io/v1alpha1
+kind: InstanceTemplate
+metadata:
+  name: pytorch-jupyter
+spec:
+  forProvider:
+    name: pytorch-jupyter
+    image: pytorch/pytorch
+    tag: "2.3.0-cuda12.1-cudnn8-runtime"
+    desc: "PyTorch image with Jupyter Lab pre-configured"
+    useJupyterLab: true
+    jupDirect: true
+    useSsh: true
+    sshDirect: true
+    readmeVisible: true
+    private: false
+    readme: |
+      # PyTorch + Jupyter
+      Stock PyTorch image with Jupyter Lab exposed via direct port mapping.
+    recommendedDiskSpace: "32"
+    onstart: |
+      #!/bin/bash
+      pip install --upgrade transformers accelerate
+    env: "-p 8080:8080 -p 8888:8888"
+  providerConfigRef:
+    name: default

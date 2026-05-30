@@ -1,0 +1,14 @@
+apiVersion: account.vastai.crossplane.io/v1alpha1
+kind: SSHKey
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/sshkey
+  labels:
+    testing.upbound.io/example-name: deploy_key
+  name: deploy-key
+spec:
+  forProvider:
+    sshKeySecretRef:
+      key: example-key
+      name: example-secret
+      namespace: upbound-system

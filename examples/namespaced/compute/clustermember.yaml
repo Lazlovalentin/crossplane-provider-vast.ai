@@ -1,0 +1,15 @@
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: ClusterMember
+metadata:
+  name: training-cluster-machine-42
+  namespace: default
+spec:
+  forProvider:
+    # ID returned by the Cluster resource (`status.atProvider.id`).
+    clusterId: "REPLACE_WITH_CLUSTER_ID"
+    # Vast.ai machine id (not instance id) to enrol into the cluster.
+    machineId: "42"
+    # Optionally promote this member to manager.
+    # newManagerId: "42"
+  providerConfigRef:
+    name: default

@@ -1,0 +1,12 @@
+apiVersion: network.vastai.m.crossplane.io/v1alpha1
+kind: Overlay
+metadata:
+  name: training-overlay
+  namespace: default
+spec:
+  forProvider:
+    name: training-overlay
+    # ID of an existing Cluster (status.atProvider.id of compute Cluster MR).
+    clusterId: "REPLACE_WITH_CLUSTER_ID"
+  providerConfigRef:
+    name: default

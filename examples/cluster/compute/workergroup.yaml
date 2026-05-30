@@ -1,0 +1,20 @@
+apiVersion: compute.vastai.crossplane.io/v1alpha1
+kind: WorkerGroup
+metadata:
+  name: inference-rtx4090
+spec:
+  forProvider:
+    # Numeric endpoint id this worker group serves (see Endpoint resource).
+    endpointId: 5001
+    endpointName: llm-inference
+    # Pin a specific template by hash to keep image + onstart consistent.
+    templateHash: "abc123def456"
+    # Search params follow Vast.ai search syntax. Example: rent RTX 4090s,
+    # max $/hr 0.60, US datacenter only.
+    searchParams: "gpu_name=RTX_4090 dlperf>15.0 dph<0.60 geolocation=US"
+    launchArgs: "--max-model-len 8192"
+    gpuRam: 24
+    testWorkers: 1
+    coldWorkers: 0
+  providerConfigRef:
+    name: default

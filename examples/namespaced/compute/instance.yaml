@@ -1,0 +1,29 @@
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Instance
+metadata:
+  name: training-rtx4090
+  namespace: default
+spec:
+  forProvider:
+    # offerId comes from a Vast.ai offer search (see vastai_gpu_offers data
+    # source / vastai search offers CLI). Replace with the real numeric id.
+    offerId: 1234567
+    image: pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
+    diskGb: 60
+    label: training-rtx4090
+    useSsh: true
+    useJupyterLab: true
+    onstart: |
+      #!/bin/bash
+      apt-get update && apt-get install -y htop
+    env:
+      MODEL_NAME: "llama-3-8b"
+      EPOCHS: "3"
+    sshKeyIds:
+      - "12345"
+    # For bid (interruptible) instances set bidPrice in $/hour.
+    # bidPrice: 0.35
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: training-rtx4090-connection

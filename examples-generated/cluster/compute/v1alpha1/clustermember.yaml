@@ -1,0 +1,26 @@
+apiVersion: compute.vastai.crossplane.io/v1alpha1
+kind: ClusterMember
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/clustermember
+  labels:
+    testing.upbound.io/example-name: worker_node
+  name: worker-node
+spec:
+  forProvider:
+    clusterId: ${vastai_cluster.gpu_cluster.id}
+    machineId: "67890"
+
+---
+
+apiVersion: compute.vastai.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/clustermember
+  labels:
+    testing.upbound.io/example-name: gpu_cluster
+  name: gpu-cluster
+spec:
+  forProvider:
+    name: training-cluster

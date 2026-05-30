@@ -1,0 +1,26 @@
+apiVersion: network.vastai.crossplane.io/v1alpha1
+kind: Overlay
+metadata:
+  annotations:
+    meta.upbound.io/example-id: network/v1alpha1/overlay
+  labels:
+    testing.upbound.io/example-name: training_net
+  name: training-net
+spec:
+  forProvider:
+    clusterId: ${vastai_cluster.gpu_cluster.id}
+    name: training-overlay
+
+---
+
+apiVersion: compute.vastai.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  annotations:
+    meta.upbound.io/example-id: network/v1alpha1/overlay
+  labels:
+    testing.upbound.io/example-name: gpu_cluster
+  name: gpu-cluster
+spec:
+  forProvider:
+    name: training-cluster

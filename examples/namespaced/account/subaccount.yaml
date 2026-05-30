@@ -1,0 +1,18 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: Subaccount
+metadata:
+  name: tenant-alpha
+  namespace: default
+spec:
+  forProvider:
+    email: tenant-alpha@example.com
+    username: tenant-alpha
+    # passwordSecretRef points at a Secret holding a strong generated password.
+    passwordSecretRef:
+      name: tenant-alpha-password
+      key: password
+    hostOnly: false
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: tenant-alpha-credentials

@@ -1,0 +1,10 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: SSHKey
+metadata:
+  name: ops-laptop
+  namespace: default
+spec:
+  forProvider:
+    sshKey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... ops@laptop"
+  providerConfigRef:
+    name: default
