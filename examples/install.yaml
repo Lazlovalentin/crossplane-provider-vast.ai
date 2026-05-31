@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-vastai
 spec:
-  package: registry.adva-soft.com/devopsteam/provider-vastai:v0.1.0
+  package: ghcr.io/lazlovalentin/provider-vastai:v0.1.0

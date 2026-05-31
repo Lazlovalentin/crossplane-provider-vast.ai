@@ -6,7 +6,6 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 )
 
-// Configure configures the network group.
 func Configure(p *ujconfig.Provider) {
 	for tfName, kind := range map[string]string{
 		"vastai_overlay":        "Overlay",

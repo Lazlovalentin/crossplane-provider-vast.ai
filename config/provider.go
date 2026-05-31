@@ -6,15 +6,15 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/config/account"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/config/compute"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/config/network"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/config/storage"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/config/account"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/config/compute"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/config/network"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/config/storage"
 )
 
 const (
 	resourcePrefix = "vastai"
-	modulePath     = "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider"
+	modulePath     = "github.com/Lazlovalentin/crossplane-provider-vast.ai"
 )
 
 //go:embed schema.json

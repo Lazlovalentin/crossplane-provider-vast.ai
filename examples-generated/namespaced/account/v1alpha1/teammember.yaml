@@ -1,0 +1,31 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: TeamMember
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/teammember
+  labels:
+    testing.upbound.io/example-name: alice
+  name: alice
+  namespace: crossplane-system
+spec:
+  forProvider:
+    email: alice@example.com
+    role: developer
+
+---
+
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: TeamRole
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/teammember
+  labels:
+    testing.upbound.io/example-name: developer
+  name: developer
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: developer
+    permissions:
+    - view_instances
+    - create_instances

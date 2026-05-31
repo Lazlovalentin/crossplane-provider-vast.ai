@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-
 package controller
 
 import (
@@ -10,25 +9,24 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
-	cluster "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/compute/cluster"
-overlaymember "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/network/overlaymember"
-volume "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/storage/volume"
-environmentvariable "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/environmentvariable"
-instancetemplate "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/instancetemplate"
-team "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/team"
-teamrole "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/teamrole"
-clustermember "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/compute/clustermember"
-workergroup "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/compute/workergroup"
-overlay "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/network/overlay"
-providerconfig "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/providerconfig"
-apikey "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/apikey"
-sshkey "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/sshkey"
-subaccount "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/subaccount"
-teammember "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/account/teammember"
-endpoint "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/compute/endpoint"
-instance "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/compute/instance"
-networkvolume "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster/storage/networkvolume"
-
+	apikey "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/apikey"
+	environmentvariable "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/environmentvariable"
+	instancetemplate "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/instancetemplate"
+	sshkey "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/sshkey"
+	subaccount "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/subaccount"
+	team "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/team"
+	teammember "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/teammember"
+	teamrole "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/account/teamrole"
+	cluster "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/compute/cluster"
+	clustermember "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/compute/clustermember"
+	endpoint "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/compute/endpoint"
+	instance "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/compute/instance"
+	workergroup "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/compute/workergroup"
+	overlay "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/network/overlay"
+	overlaymember "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/network/overlaymember"
+	providerconfig "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/providerconfig"
+	networkvolume "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/storage/networkvolume"
+	volume "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster/storage/volume"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to

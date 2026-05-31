@@ -11,8 +11,8 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/terraform"
 
-	clusterv1beta1 "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/apis/cluster/v1beta1"
-	namespacedv1beta1 "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/apis/namespaced/v1beta1"
+	clusterv1beta1 "github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/cluster/v1beta1"
+	namespacedv1beta1 "github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/v1beta1"
 )
 
 const (

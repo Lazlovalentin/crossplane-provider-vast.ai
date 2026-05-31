@@ -12,10 +12,8 @@ Based on:
 
 ## Status
 
-Scaffold. Resource Kinds are configured (see `config/`), but the generated
-Kubernetes types (`apis/<group>/v1alpha1/...`) and controllers
-(`internal/controller/...`) must be produced from the Terraform provider
-schema using `make generate`.
+Scaffold. Resource Kinds are configured (see `config/`), with generated
+Kubernetes types, CRDs, examples, and controllers included in the repository.
 
 ## Resources
 
@@ -110,4 +108,4 @@ spec:
 ## Report a Bug
 
 For filing bugs, suggesting improvements, or requesting new features, please
-open an [issue](https://gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/-/issues).
+open an [issue](https://github.com/Lazlovalentin/crossplane-provider-vast.ai/issues).

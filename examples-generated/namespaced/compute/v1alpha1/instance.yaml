@@ -1,0 +1,38 @@
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Instance
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/instance
+  labels:
+    testing.upbound.io/example-name: training
+  name: training
+  namespace: crossplane-system
+spec:
+  forProvider:
+    diskGb: 50
+    env:
+      PROJECT_NAME: my-experiment
+      WANDB_API_KEY: your-wandb-key
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    label: ml-training-run
+    offerId: ${data.vastai_gpu_offers.rtx4090.most_affordable.id}
+    onstart: cd /workspace && pip install -r requirements.txt
+    sshKeyIds:
+    - ${vastai_ssh_key.my_key.id}
+
+---
+
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: SSHKey
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/instance
+  labels:
+    testing.upbound.io/example-name: my_key
+  name: my-key
+  namespace: crossplane-system
+spec:
+  forProvider:
+    sshKeySecretRef:
+      key: example-key
+      name: example-secret

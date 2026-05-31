@@ -1,0 +1,511 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.20.1
+  name: instancetemplates.account.vastai.m.crossplane.io
+spec:
+  group: account.vastai.m.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - vastai
+    kind: InstanceTemplate
+    listKind: InstanceTemplateList
+    plural: instancetemplates
+    singular: instancetemplate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: InstanceTemplate is the Schema for the InstanceTemplates API.
+          Manages a Vast.ai template.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: InstanceTemplateSpec defines the desired state of InstanceTemplate
+            properties:
+              forProvider:
+                properties:
+                  desc:
+                    description: |-
+                      (String) Short description of the template.
+                      Short description of the template.
+                    type: string
+                  dockerLoginRepoSecretRef:
+                    description: |-
+                      (String, Sensitive) Private Docker registry URL for authenticated image pulls. This value is sensitive and will not be displayed in plan output.
+                      Private Docker registry URL for authenticated image pulls. This value is sensitive and will not be displayed in plan output.
+                    properties:
+                      key:
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    type: object
+                  env:
+                    description: |-
+                      e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+                      Environment variables and port mappings in Docker CLI format (e.g., '-e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+                    type: string
+                  href:
+                    description: |-
+                      populated from Docker image metadata.
+                      External URL associated with the template (e.g., documentation or project page). May be auto-populated from Docker image metadata.
+                    type: string
+                  image:
+                    description: |-
+                      devel'). Must be a valid Docker image reference.
+                      Docker image reference (e.g., 'pytorch/pytorch:latest', 'nvidia/cuda:12.0-devel'). Must be a valid Docker image reference.
+                    type: string
+                  jupDirect:
+                    description: |-
+                      (Boolean) Enable direct Jupyter access to instances created from this template.
+                      Enable direct Jupyter access to instances created from this template.
+                    type: boolean
+                  jupyterDir:
+                    description: |-
+                      (String) Working directory for Jupyter when the instance starts.
+                      Working directory for Jupyter when the instance starts.
+                    type: string
+                  name:
+                    description: |-
+                      (String) Template name. Must be between 1 and 200 characters.
+                      Template name. Must be between 1 and 200 characters.
+                    type: string
+                  onstart:
+                    description: |-
+                      (String) Bash script to run when the instance starts. Executed after the container is initialized.
+                      Bash script to run when the instance starts. Executed after the container is initialized.
+                    type: string
+                  private:
+                    description: |-
+                      (Boolean) Whether this template is private (only visible to the owner). Default: false.
+                      Whether this template is private (only visible to the owner). Default: false.
+                    type: boolean
+                  readme:
+                    description: |-
+                      (String) Markdown readme content displayed on the template listing page.
+                      Markdown readme content displayed on the template listing page.
+                    type: string
+                  readmeVisible:
+                    description: |-
+                      (Boolean) Whether the readme is visible on the template listing.
+                      Whether the readme is visible on the template listing.
+                    type: boolean
+                  recommendedDiskSpace:
+                    description: |-
+                      (String) Recommended disk space for instances using this template (e.g., '50GB').
+                      Recommended disk space for instances using this template (e.g., '50GB').
+                    type: string
+                  repo:
+                    description: |-
+                      populated from Docker image metadata.
+                      Source code repository URL for the template. May be auto-populated from Docker image metadata.
+                    type: string
+                  sshDirect:
+                    description: |-
+                      (Boolean) Enable direct SSH access to instances created from this template.
+                      Enable direct SSH access to instances created from this template.
+                    type: boolean
+                  tag:
+                    description: |-
+                      (String) Docker image tag. If not set, the API may assign a default based on the image reference.
+                      Docker image tag. If not set, the API may assign a default based on the image reference.
+                    type: string
+                  useJupyterLab:
+                    description: |-
+                      (Boolean) Use JupyterLab instead of classic Jupyter Notebook interface.
+                      Use JupyterLab instead of classic Jupyter Notebook interface.
+                    type: boolean
+                  useSsh:
+                    description: |-
+                      (Boolean) Enable SSH server in instances created from this template.
+                      Enable SSH server in instances created from this template.
+                    type: boolean
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  desc:
+                    description: |-
+                      (String) Short description of the template.
+                      Short description of the template.
+                    type: string
+                  dockerLoginRepoSecretRef:
+                    description: |-
+                      (String, Sensitive) Private Docker registry URL for authenticated image pulls. This value is sensitive and will not be displayed in plan output.
+                      Private Docker registry URL for authenticated image pulls. This value is sensitive and will not be displayed in plan output.
+                    properties:
+                      key:
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    type: object
+                  env:
+                    description: |-
+                      e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+                      Environment variables and port mappings in Docker CLI format (e.g., '-e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+                    type: string
+                  href:
+                    description: |-
+                      populated from Docker image metadata.
+                      External URL associated with the template (e.g., documentation or project page). May be auto-populated from Docker image metadata.
+                    type: string
+                  image:
+                    description: |-
+                      devel'). Must be a valid Docker image reference.
+                      Docker image reference (e.g., 'pytorch/pytorch:latest', 'nvidia/cuda:12.0-devel'). Must be a valid Docker image reference.
+                    type: string
+                  jupDirect:
+                    description: |-
+                      (Boolean) Enable direct Jupyter access to instances created from this template.
+                      Enable direct Jupyter access to instances created from this template.
+                    type: boolean
+                  jupyterDir:
+                    description: |-
+                      (String) Working directory for Jupyter when the instance starts.
+                      Working directory for Jupyter when the instance starts.
+                    type: string
+                  name:
+                    description: |-
+                      (String) Template name. Must be between 1 and 200 characters.
+                      Template name. Must be between 1 and 200 characters.
+                    type: string
+                  onstart:
+                    description: |-
+                      (String) Bash script to run when the instance starts. Executed after the container is initialized.
+                      Bash script to run when the instance starts. Executed after the container is initialized.
+                    type: string
+                  private:
+                    description: |-
+                      (Boolean) Whether this template is private (only visible to the owner). Default: false.
+                      Whether this template is private (only visible to the owner). Default: false.
+                    type: boolean
+                  readme:
+                    description: |-
+                      (String) Markdown readme content displayed on the template listing page.
+                      Markdown readme content displayed on the template listing page.
+                    type: string
+                  readmeVisible:
+                    description: |-
+                      (Boolean) Whether the readme is visible on the template listing.
+                      Whether the readme is visible on the template listing.
+                    type: boolean
+                  recommendedDiskSpace:
+                    description: |-
+                      (String) Recommended disk space for instances using this template (e.g., '50GB').
+                      Recommended disk space for instances using this template (e.g., '50GB').
+                    type: string
+                  repo:
+                    description: |-
+                      populated from Docker image metadata.
+                      Source code repository URL for the template. May be auto-populated from Docker image metadata.
+                    type: string
+                  sshDirect:
+                    description: |-
+                      (Boolean) Enable direct SSH access to instances created from this template.
+                      Enable direct SSH access to instances created from this template.
+                    type: boolean
+                  tag:
+                    description: |-
+                      (String) Docker image tag. If not set, the API may assign a default based on the image reference.
+                      Docker image tag. If not set, the API may assign a default based on the image reference.
+                    type: string
+                  useJupyterLab:
+                    description: |-
+                      (Boolean) Use JupyterLab instead of classic Jupyter Notebook interface.
+                      Use JupyterLab instead of classic Jupyter Notebook interface.
+                    type: boolean
+                  useSsh:
+                    description: |-
+                      (Boolean) Enable SSH server in instances created from this template.
+                      Enable SSH server in instances created from this template.
+                    type: boolean
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  kind: ClusterProviderConfig
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.image is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.image)
+                || (has(self.initProvider) && has(self.initProvider.image))'
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+          status:
+            description: InstanceTemplateStatus defines the observed state of InstanceTemplate.
+            properties:
+              atProvider:
+                properties:
+                  createdAt:
+                    description: |-
+                      (String) Timestamp when the template was created (set by the API).
+                      Timestamp when the template was created (set by the API).
+                    type: string
+                  desc:
+                    description: |-
+                      (String) Short description of the template.
+                      Short description of the template.
+                    type: string
+                  env:
+                    description: |-
+                      e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+                      Environment variables and port mappings in Docker CLI format (e.g., '-e KEY=VALUE -p 8080:8080'). Passed directly to the container runtime.
+                    type: string
+                  hashId:
+                    description: |-
+                      addressed template hash ID. Changes when template content is updated.
+                      Content-addressed template hash ID. Changes when template content is updated.
+                    type: string
+                  href:
+                    description: |-
+                      populated from Docker image metadata.
+                      External URL associated with the template (e.g., documentation or project page). May be auto-populated from Docker image metadata.
+                    type: string
+                  id:
+                    description: (String) Numeric template ID (stable across updates).
+                    type: string
+                  image:
+                    description: |-
+                      devel'). Must be a valid Docker image reference.
+                      Docker image reference (e.g., 'pytorch/pytorch:latest', 'nvidia/cuda:12.0-devel'). Must be a valid Docker image reference.
+                    type: string
+                  jupDirect:
+                    description: |-
+                      (Boolean) Enable direct Jupyter access to instances created from this template.
+                      Enable direct Jupyter access to instances created from this template.
+                    type: boolean
+                  jupyterDir:
+                    description: |-
+                      (String) Working directory for Jupyter when the instance starts.
+                      Working directory for Jupyter when the instance starts.
+                    type: string
+                  name:
+                    description: |-
+                      (String) Template name. Must be between 1 and 200 characters.
+                      Template name. Must be between 1 and 200 characters.
+                    type: string
+                  numericId:
+                    description: |-
+                      (Number) Numeric template ID assigned by the Vast.ai API (same as id, typed as integer).
+                      Numeric template ID assigned by the Vast.ai API (same as id, typed as integer).
+                    type: number
+                  onstart:
+                    description: |-
+                      (String) Bash script to run when the instance starts. Executed after the container is initialized.
+                      Bash script to run when the instance starts. Executed after the container is initialized.
+                    type: string
+                  private:
+                    description: |-
+                      (Boolean) Whether this template is private (only visible to the owner). Default: false.
+                      Whether this template is private (only visible to the owner). Default: false.
+                    type: boolean
+                  readme:
+                    description: |-
+                      (String) Markdown readme content displayed on the template listing page.
+                      Markdown readme content displayed on the template listing page.
+                    type: string
+                  readmeVisible:
+                    description: |-
+                      (Boolean) Whether the readme is visible on the template listing.
+                      Whether the readme is visible on the template listing.
+                    type: boolean
+                  recommendedDiskSpace:
+                    description: |-
+                      (String) Recommended disk space for instances using this template (e.g., '50GB').
+                      Recommended disk space for instances using this template (e.g., '50GB').
+                    type: string
+                  repo:
+                    description: |-
+                      populated from Docker image metadata.
+                      Source code repository URL for the template. May be auto-populated from Docker image metadata.
+                    type: string
+                  sshDirect:
+                    description: |-
+                      (Boolean) Enable direct SSH access to instances created from this template.
+                      Enable direct SSH access to instances created from this template.
+                    type: boolean
+                  tag:
+                    description: |-
+                      (String) Docker image tag. If not set, the API may assign a default based on the image reference.
+                      Docker image tag. If not set, the API may assign a default based on the image reference.
+                    type: string
+                  useJupyterLab:
+                    description: |-
+                      (Boolean) Use JupyterLab instead of classic Jupyter Notebook interface.
+                      Use JupyterLab instead of classic Jupyter Notebook interface.
+                    type: boolean
+                  useSsh:
+                    description: |-
+                      (Boolean) Enable SSH server in instances created from this template.
+                      Enable SSH server in instances created from this template.
+                    type: boolean
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

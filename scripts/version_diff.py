@@ -28,9 +28,11 @@ if __name__ == "__main__":
     bumped_schemas = bump["provider_schemas"][provider_name]["resource_schemas"]
 
     for name in resources:
-        try:
-            if base_schemas[name]["version"] != bumped_schemas[name]["version"]:
-                print(f'{name}:{base_schemas[name]["version"]}-{bumped_schemas[name]["version"]}')
-        except KeyError as ke:
-            print(f'{name} is not found in schema: {ke}')
+        if name not in base_schemas:
+            print(f"{name} is not found in base schema {base_path}", file=sys.stderr)
             continue
+        if name not in bumped_schemas:
+            print(f"{name} is not found in bumped schema {bumped_path}", file=sys.stderr)
+            continue
+        if base_schemas[name]["version"] != bumped_schemas[name]["version"]:
+            print(f'{name}:{base_schemas[name]["version"]}-{bumped_schemas[name]["version"]}')

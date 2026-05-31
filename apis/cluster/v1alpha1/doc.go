@@ -1,4 +1,4 @@
-// Package v1alpha1 contains the core resources of the Vast.ai jet provider.
+// Package v1alpha1 contains the core resources of the template jet provider.
 // +kubebuilder:object:generate=true
 // +groupName=vastai.crossplane.io
 // +versionName=v1alpha1

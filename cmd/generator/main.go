@@ -7,7 +7,7 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/pipeline"
 
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/config"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/config"
 )
 
 func main() {

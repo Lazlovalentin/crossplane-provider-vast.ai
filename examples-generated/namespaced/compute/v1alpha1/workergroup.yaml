@@ -1,0 +1,31 @@
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: WorkerGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/workergroup
+  labels:
+    testing.upbound.io/example-name: llm_workers
+  name: llm-workers
+  namespace: crossplane-system
+spec:
+  forProvider:
+    endpointId: ${vastai_endpoint.llm_serving.id}
+    gpuRam: 24
+    searchParams: gpu_ram>=24 num_gpus=1 gpu_name=RTX_4090
+    templateHash: abc123def456
+    testWorkers: 3
+
+---
+
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Endpoint
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/workergroup
+  labels:
+    testing.upbound.io/example-name: llm_serving
+  name: llm-serving
+  namespace: crossplane-system
+spec:
+  forProvider:
+    endpointName: llm-inference

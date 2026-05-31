@@ -34,14 +34,14 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	apisCluster "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/apis/cluster"
-	apisNamespaced "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/apis/namespaced"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/config"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/clients"
-	controllerCluster "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/cluster"
-	controllerNamespaced "gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/controller/namespaced"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/features"
-	"gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider/internal/version"
+	apisCluster "github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/cluster"
+	apisNamespaced "github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/config"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/clients"
+	controllerCluster "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/cluster"
+	controllerNamespaced "github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/controller/namespaced"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/features"
+	"github.com/Lazlovalentin/crossplane-provider-vast.ai/internal/version"
 )
 
 const (

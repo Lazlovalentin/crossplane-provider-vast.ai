@@ -1,0 +1,61 @@
+apiVersion: network.vastai.m.crossplane.io/v1alpha1
+kind: OverlayMember
+metadata:
+  annotations:
+    meta.upbound.io/example-id: network/v1alpha1/overlaymember
+  labels:
+    testing.upbound.io/example-name: training_instance
+  name: training-instance
+  namespace: crossplane-system
+spec:
+  forProvider:
+    instanceId: ${vastai_instance.training.id}
+    overlayName: training-overlay
+
+---
+
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  annotations:
+    meta.upbound.io/example-id: network/v1alpha1/overlaymember
+  labels:
+    testing.upbound.io/example-name: gpu_cluster
+  name: gpu-cluster
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: training-cluster
+
+---
+
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Instance
+metadata:
+  annotations:
+    meta.upbound.io/example-id: network/v1alpha1/overlaymember
+  labels:
+    testing.upbound.io/example-name: training
+  name: training
+  namespace: crossplane-system
+spec:
+  forProvider:
+    diskGb: 20
+    image: pytorch/pytorch:latest
+    offerId: ${data.vastai_gpu_offers.cheapest.offers[0].id}
+
+---
+
+apiVersion: network.vastai.m.crossplane.io/v1alpha1
+kind: Overlay
+metadata:
+  annotations:
+    meta.upbound.io/example-id: network/v1alpha1/overlaymember
+  labels:
+    testing.upbound.io/example-name: training_net
+  name: training-net
+  namespace: crossplane-system
+spec:
+  forProvider:
+    clusterId: ${vastai_cluster.gpu_cluster.id}
+    name: training-overlay

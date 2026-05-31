@@ -1,4 +1,4 @@
-module gitlab.adva-soft.com/devopsteam/crossplane-vast.ai-provider
+module github.com/Lazlovalentin/crossplane-provider-vast.ai
 
 go 1.25.9
 

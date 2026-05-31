@@ -1,0 +1,21 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: InstanceTemplate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/instancetemplate
+  labels:
+    testing.upbound.io/example-name: pytorch_training
+  name: pytorch-training
+  namespace: crossplane-system
+spec:
+  forProvider:
+    env: '{"PYTHONUNBUFFERED": "1", "CUDA_VISIBLE_DEVICES": "all"}'
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    name: pytorch-training-template
+    onstart: pip install wandb tensorboard && cd /workspace
+    private: false
+    readme: PyTorch training template with SSH and JupyterLab access.
+    readmeVisible: true
+    sshDirect: true
+    useJupyterLab: true
+    useSsh: true

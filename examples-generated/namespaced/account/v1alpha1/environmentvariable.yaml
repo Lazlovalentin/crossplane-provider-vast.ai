@@ -1,0 +1,15 @@
+apiVersion: account.vastai.m.crossplane.io/v1alpha1
+kind: EnvironmentVariable
+metadata:
+  annotations:
+    meta.upbound.io/example-id: account/v1alpha1/environmentvariable
+  labels:
+    testing.upbound.io/example-name: hf_token
+  name: hf-token
+  namespace: crossplane-system
+spec:
+  forProvider:
+    key: HF_TOKEN
+    valueSecretRef:
+      key: example-key
+      name: example-secret

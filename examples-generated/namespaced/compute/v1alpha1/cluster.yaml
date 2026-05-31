@@ -1,0 +1,13 @@
+apiVersion: compute.vastai.m.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1alpha1/cluster
+  labels:
+    testing.upbound.io/example-name: gpu_cluster
+  name: gpu-cluster
+  namespace: crossplane-system
+spec:
+  forProvider:
+    managerId: "12345"
+    subnet: 10.0.0.0/24
