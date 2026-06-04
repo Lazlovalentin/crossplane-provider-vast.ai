@@ -12,6 +12,10 @@ on:
         default: '1.24'
         required: false
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   publish-provider-package:
     uses: crossplane-contrib/provider-workflows/.github/workflows/publish-provider.yml@451c4dc6ad3691b0a702a997a0ac24e8bbc8bbaa # main
@@ -20,7 +24,7 @@ jobs:
       version: ${{ github.event.inputs.version }}
       go-version: ${{ github.event.inputs.go-version }}
       cleanup-disk: true
+      registry_org: lazlovalentin
+      mirror: false
     secrets:
       GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
-      XPKG_MIRROR_TOKEN: ${{ secrets.XPKG_MIRROR_TOKEN }}
-      XPKG_MIRROR_ACCESS_ID: ${{ secrets.XPKG_MIRROR_ACCESS_ID }}
