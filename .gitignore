@@ -12,3 +12,6 @@ cover.out
 .zed
 .aislop
 .claude
+.claude/
+MEMORY.md
+memory/

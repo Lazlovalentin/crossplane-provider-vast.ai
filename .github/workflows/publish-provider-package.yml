@@ -4,11 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version string to use while publishing the package (e.g. v1.0.0-alpha.1)"
-        default: ''
-        required: false
+        description: "Version string to use while publishing the package (e.g. v0.0.1)"
+        required: true
       go-version:
-        description: 'Go version to use if building needs to be done'
+        description: 'Go version to use'
         default: '1.24'
         required: false
 
@@ -16,15 +15,76 @@ permissions:
   contents: read
   packages: write
 
+env:
+  REGISTRY_ORGS: ghcr.io/lazlovalentin
+  XPKG_REG_ORGS: ghcr.io/lazlovalentin
+  XPKG_REG_ORGS_NO_PROMOTE: ghcr.io/lazlovalentin
+  CROSSPLANE_CLI_VERSION: v2.2.1
+  PLATFORMS: linux_amd64 linux_arm64
+
 jobs:
-  publish-provider-package:
-    uses: crossplane-contrib/provider-workflows/.github/workflows/publish-provider.yml@451c4dc6ad3691b0a702a997a0ac24e8bbc8bbaa # main
-    with:
-      repository: provider-vastai
-      version: ${{ github.event.inputs.version }}
-      go-version: ${{ github.event.inputs.go-version }}
-      cleanup-disk: true
-      registry_org: lazlovalentin
-      mirror: false
-    secrets:
-      GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          docker-images: true
+          large-packages: false
+          swap-storage: false
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ github.event.inputs.go-version }}
+          cache: true
+
+      - name: Pre-install Crossplane CLI (bypass releases.crossplane.io 403)
+        env:
+          CRANK_PKG: github.com/crossplane/crossplane/v2/cmd/crank
+        run: |
+          set -euo pipefail
+          TOOLS_DIR="$(pwd)/.cache/tools/linux_x86_64"
+          mkdir -p "$TOOLS_DIR"
+          GOBIN="$TOOLS_DIR" go install "${CRANK_PKG}@${CROSSPLANE_CLI_VERSION}"
+          mv "$TOOLS_DIR/crank" "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}"
+          chmod +x "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}"
+          "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}" --version
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Vendor Go modules
+        run: make vendor vendor.check
+
+      - name: Build
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: make -j2 build.all
+
+      - name: Publish
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: make publish BRANCH_NAME="$BRANCH_NAME" VERSION="$VERSION"
