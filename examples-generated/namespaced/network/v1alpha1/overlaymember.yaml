@@ -9,7 +9,9 @@ metadata:
   namespace: crossplane-system
 spec:
   forProvider:
-    instanceId: ${vastai_instance.training.id}
+    instanceIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: training
     overlayName: training-overlay
 
 ---
@@ -57,5 +59,7 @@ metadata:
   namespace: crossplane-system
 spec:
   forProvider:
-    clusterId: ${vastai_cluster.gpu_cluster.id}
+    clusterIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: gpu_cluster
     name: training-overlay

@@ -18,7 +18,16 @@ type OverlayInitParameters struct {
 
 	// (String) ID of the cluster this overlay belongs to.
 	// ID of the cluster this overlay belongs to.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/compute/v1alpha1.Cluster
 	ClusterID *string `json:"clusterId,omitempty" tf:"cluster_id,omitempty"`
+
+	// Reference to a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDRef *v1.NamespacedReference `json:"clusterIdRef,omitempty" tf:"-"`
+
+	// Selector for a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDSelector *v1.NamespacedSelector `json:"clusterIdSelector,omitempty" tf:"-"`
 
 	// (String) Name of the overlay network.
 	// Name of the overlay network.
@@ -47,8 +56,17 @@ type OverlayParameters struct {
 
 	// (String) ID of the cluster this overlay belongs to.
 	// ID of the cluster this overlay belongs to.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/compute/v1alpha1.Cluster
 	// +kubebuilder:validation:Optional
 	ClusterID *string `json:"clusterId,omitempty" tf:"cluster_id,omitempty"`
+
+	// Reference to a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDRef *v1.NamespacedReference `json:"clusterIdRef,omitempty" tf:"-"`
+
+	// Selector for a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDSelector *v1.NamespacedSelector `json:"clusterIdSelector,omitempty" tf:"-"`
 
 	// (String) Name of the overlay network.
 	// Name of the overlay network.
@@ -92,7 +110,6 @@ type OverlayStatus struct {
 type Overlay struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.clusterId) || (has(self.initProvider) && has(self.initProvider.clusterId))",message="spec.forProvider.clusterId is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
 	Spec   OverlaySpec   `json:"spec"`
 	Status OverlayStatus `json:"status,omitempty"`

@@ -132,6 +132,16 @@ func (in *ClusterMemberInitParameters) DeepCopyInto(out *ClusterMemberInitParame
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterIDRef != nil {
+		in, out := &in.ClusterIDRef, &out.ClusterIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.ClusterIDSelector != nil {
+		in, out := &in.ClusterIDSelector, &out.ClusterIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.MachineID != nil {
 		in, out := &in.MachineID, &out.MachineID
 		*out = new(string)
@@ -238,6 +248,16 @@ func (in *ClusterMemberParameters) DeepCopyInto(out *ClusterMemberParameters) {
 		in, out := &in.ClusterID, &out.ClusterID
 		*out = new(string)
 		**out = **in
+	}
+	if in.ClusterIDRef != nil {
+		in, out := &in.ClusterIDRef, &out.ClusterIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.ClusterIDSelector != nil {
+		in, out := &in.ClusterIDSelector, &out.ClusterIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.MachineID != nil {
 		in, out := &in.MachineID, &out.MachineID
@@ -1175,6 +1195,16 @@ func (in *WorkerGroupInitParameters) DeepCopyInto(out *WorkerGroupInitParameters
 		*out = new(float64)
 		**out = **in
 	}
+	if in.EndpointIDRef != nil {
+		in, out := &in.EndpointIDRef, &out.EndpointIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.EndpointIDSelector != nil {
+		in, out := &in.EndpointIDSelector, &out.EndpointIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.EndpointName != nil {
 		in, out := &in.EndpointName, &out.EndpointName
 		*out = new(string)
@@ -1204,6 +1234,16 @@ func (in *WorkerGroupInitParameters) DeepCopyInto(out *WorkerGroupInitParameters
 		in, out := &in.TemplateID, &out.TemplateID
 		*out = new(float64)
 		**out = **in
+	}
+	if in.TemplateIDRef != nil {
+		in, out := &in.TemplateIDRef, &out.TemplateIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.TemplateIDSelector != nil {
+		in, out := &in.TemplateIDSelector, &out.TemplateIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.TestWorkers != nil {
 		in, out := &in.TestWorkers, &out.TestWorkers
@@ -1332,6 +1372,16 @@ func (in *WorkerGroupParameters) DeepCopyInto(out *WorkerGroupParameters) {
 		*out = new(float64)
 		**out = **in
 	}
+	if in.EndpointIDRef != nil {
+		in, out := &in.EndpointIDRef, &out.EndpointIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.EndpointIDSelector != nil {
+		in, out := &in.EndpointIDSelector, &out.EndpointIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.EndpointName != nil {
 		in, out := &in.EndpointName, &out.EndpointName
 		*out = new(string)
@@ -1361,6 +1411,16 @@ func (in *WorkerGroupParameters) DeepCopyInto(out *WorkerGroupParameters) {
 		in, out := &in.TemplateID, &out.TemplateID
 		*out = new(float64)
 		**out = **in
+	}
+	if in.TemplateIDRef != nil {
+		in, out := &in.TemplateIDRef, &out.TemplateIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.TemplateIDSelector != nil {
+		in, out := &in.TemplateIDSelector, &out.TemplateIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.TestWorkers != nil {
 		in, out := &in.TestWorkers, &out.TestWorkers

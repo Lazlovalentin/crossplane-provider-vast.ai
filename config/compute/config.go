@@ -20,4 +20,19 @@ func Configure(p *ujconfig.Provider) {
 			r.Kind = kind
 		})
 	}
+
+	p.AddResourceConfigurator("vastai_worker_group", func(r *ujconfig.Resource) {
+		r.References["endpoint_id"] = ujconfig.Reference{
+			TerraformName: "vastai_endpoint",
+		}
+		r.References["template_id"] = ujconfig.Reference{
+			TerraformName: "vastai_template",
+		}
+	})
+
+	p.AddResourceConfigurator("vastai_cluster_member", func(r *ujconfig.Resource) {
+		r.References["cluster_id"] = ujconfig.Reference{
+			TerraformName: "vastai_cluster",
+		}
+	})
 }

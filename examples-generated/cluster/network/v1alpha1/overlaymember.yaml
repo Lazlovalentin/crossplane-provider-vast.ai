@@ -8,7 +8,9 @@ metadata:
   name: training-instance
 spec:
   forProvider:
-    instanceId: ${vastai_instance.training.id}
+    instanceIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: training
     overlayName: training-overlay
 
 ---
@@ -53,5 +55,7 @@ metadata:
   name: training-net
 spec:
   forProvider:
-    clusterId: ${vastai_cluster.gpu_cluster.id}
+    clusterIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: gpu_cluster
     name: training-overlay

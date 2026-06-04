@@ -9,7 +9,9 @@ metadata:
   namespace: crossplane-system
 spec:
   forProvider:
-    clusterId: ${vastai_cluster.gpu_cluster.id}
+    clusterIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: gpu_cluster
     machineId: "67890"
 
 ---

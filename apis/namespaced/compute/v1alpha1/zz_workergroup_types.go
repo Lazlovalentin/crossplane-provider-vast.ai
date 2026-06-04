@@ -22,7 +22,16 @@ type WorkerGroupInitParameters struct {
 
 	// (Number) ID of the parent endpoint this worker group belongs to. Changing this forces a new resource.
 	// ID of the parent endpoint this worker group belongs to. Changing this forces a new resource.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/compute/v1alpha1.Endpoint
 	EndpointID *float64 `json:"endpointId,omitempty" tf:"endpoint_id,omitempty"`
+
+	// Reference to a Endpoint in compute to populate endpointId.
+	// +kubebuilder:validation:Optional
+	EndpointIDRef *v1.NamespacedReference `json:"endpointIdRef,omitempty" tf:"-"`
+
+	// Selector for a Endpoint in compute to populate endpointId.
+	// +kubebuilder:validation:Optional
+	EndpointIDSelector *v1.NamespacedSelector `json:"endpointIdSelector,omitempty" tf:"-"`
 
 	// (String) Name of the parent endpoint (computed from endpoint_id if not set).
 	// Name of the parent endpoint (computed from endpoint_id if not set).
@@ -46,7 +55,16 @@ type WorkerGroupInitParameters struct {
 
 	// (Number) Numeric template ID for worker instances. Either template_hash or template_id must be provided.
 	// Numeric template ID for worker instances. Either template_hash or template_id must be provided.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/account/v1alpha1.InstanceTemplate
 	TemplateID *float64 `json:"templateId,omitempty" tf:"template_id,omitempty"`
+
+	// Reference to a InstanceTemplate in account to populate templateId.
+	// +kubebuilder:validation:Optional
+	TemplateIDRef *v1.NamespacedReference `json:"templateIdRef,omitempty" tf:"-"`
+
+	// Selector for a InstanceTemplate in account to populate templateId.
+	// +kubebuilder:validation:Optional
+	TemplateIDSelector *v1.NamespacedSelector `json:"templateIdSelector,omitempty" tf:"-"`
 
 	// (Number) Number of workers for initial performance estimate (default: 3).
 	// Number of workers for initial performance estimate (default: 3).
@@ -104,8 +122,17 @@ type WorkerGroupParameters struct {
 
 	// (Number) ID of the parent endpoint this worker group belongs to. Changing this forces a new resource.
 	// ID of the parent endpoint this worker group belongs to. Changing this forces a new resource.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/compute/v1alpha1.Endpoint
 	// +kubebuilder:validation:Optional
 	EndpointID *float64 `json:"endpointId,omitempty" tf:"endpoint_id,omitempty"`
+
+	// Reference to a Endpoint in compute to populate endpointId.
+	// +kubebuilder:validation:Optional
+	EndpointIDRef *v1.NamespacedReference `json:"endpointIdRef,omitempty" tf:"-"`
+
+	// Selector for a Endpoint in compute to populate endpointId.
+	// +kubebuilder:validation:Optional
+	EndpointIDSelector *v1.NamespacedSelector `json:"endpointIdSelector,omitempty" tf:"-"`
 
 	// (String) Name of the parent endpoint (computed from endpoint_id if not set).
 	// Name of the parent endpoint (computed from endpoint_id if not set).
@@ -134,8 +161,17 @@ type WorkerGroupParameters struct {
 
 	// (Number) Numeric template ID for worker instances. Either template_hash or template_id must be provided.
 	// Numeric template ID for worker instances. Either template_hash or template_id must be provided.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/namespaced/account/v1alpha1.InstanceTemplate
 	// +kubebuilder:validation:Optional
 	TemplateID *float64 `json:"templateId,omitempty" tf:"template_id,omitempty"`
+
+	// Reference to a InstanceTemplate in account to populate templateId.
+	// +kubebuilder:validation:Optional
+	TemplateIDRef *v1.NamespacedReference `json:"templateIdRef,omitempty" tf:"-"`
+
+	// Selector for a InstanceTemplate in account to populate templateId.
+	// +kubebuilder:validation:Optional
+	TemplateIDSelector *v1.NamespacedSelector `json:"templateIdSelector,omitempty" tf:"-"`
 
 	// (Number) Number of workers for initial performance estimate (default: 3).
 	// Number of workers for initial performance estimate (default: 3).
@@ -179,9 +215,8 @@ type WorkerGroupStatus struct {
 type WorkerGroup struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.endpointId) || (has(self.initProvider) && has(self.initProvider.endpointId))",message="spec.forProvider.endpointId is a required parameter"
-	Spec   WorkerGroupSpec   `json:"spec"`
-	Status WorkerGroupStatus `json:"status,omitempty"`
+	Spec              WorkerGroupSpec   `json:"spec"`
+	Status            WorkerGroupStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

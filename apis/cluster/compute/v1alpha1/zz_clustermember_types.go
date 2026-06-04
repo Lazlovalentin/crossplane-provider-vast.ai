@@ -17,7 +17,16 @@ type ClusterMemberInitParameters struct {
 
 	// (String) ID of the cluster to join.
 	// ID of the cluster to join.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/cluster/compute/v1alpha1.Cluster
 	ClusterID *string `json:"clusterId,omitempty" tf:"cluster_id,omitempty"`
+
+	// Reference to a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDRef *v1.Reference `json:"clusterIdRef,omitempty" tf:"-"`
+
+	// Selector for a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDSelector *v1.Selector `json:"clusterIdSelector,omitempty" tf:"-"`
 
 	// (String) ID of the machine to add to the cluster.
 	// ID of the machine to add to the cluster.
@@ -58,8 +67,17 @@ type ClusterMemberParameters struct {
 
 	// (String) ID of the cluster to join.
 	// ID of the cluster to join.
+	// +crossplane:generate:reference:type=github.com/Lazlovalentin/crossplane-provider-vast.ai/apis/cluster/compute/v1alpha1.Cluster
 	// +kubebuilder:validation:Optional
 	ClusterID *string `json:"clusterId,omitempty" tf:"cluster_id,omitempty"`
+
+	// Reference to a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDRef *v1.Reference `json:"clusterIdRef,omitempty" tf:"-"`
+
+	// Selector for a Cluster in compute to populate clusterId.
+	// +kubebuilder:validation:Optional
+	ClusterIDSelector *v1.Selector `json:"clusterIdSelector,omitempty" tf:"-"`
 
 	// (String) ID of the machine to add to the cluster.
 	// ID of the machine to add to the cluster.
@@ -108,7 +126,6 @@ type ClusterMemberStatus struct {
 type ClusterMember struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.clusterId) || (has(self.initProvider) && has(self.initProvider.clusterId))",message="spec.forProvider.clusterId is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.machineId) || (has(self.initProvider) && has(self.initProvider.machineId))",message="spec.forProvider.machineId is a required parameter"
 	Spec   ClusterMemberSpec   `json:"spec"`
 	Status ClusterMemberStatus `json:"status,omitempty"`

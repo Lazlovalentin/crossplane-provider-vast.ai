@@ -17,4 +17,19 @@ func Configure(p *ujconfig.Provider) {
 			r.Kind = kind
 		})
 	}
+
+	p.AddResourceConfigurator("vastai_overlay", func(r *ujconfig.Resource) {
+		r.References["cluster_id"] = ujconfig.Reference{
+			TerraformName: "vastai_cluster",
+		}
+	})
+
+	p.AddResourceConfigurator("vastai_overlay_member", func(r *ujconfig.Resource) {
+		r.References["overlay_id"] = ujconfig.Reference{
+			TerraformName: "vastai_overlay",
+		}
+		r.References["instance_id"] = ujconfig.Reference{
+			TerraformName: "vastai_instance",
+		}
+	})
 }

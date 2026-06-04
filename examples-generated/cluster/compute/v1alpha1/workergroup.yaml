@@ -8,7 +8,9 @@ metadata:
   name: llm-workers
 spec:
   forProvider:
-    endpointId: ${vastai_endpoint.llm_serving.id}
+    endpointIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: llm_serving
     gpuRam: 24
     searchParams: gpu_ram>=24 num_gpus=1 gpu_name=RTX_4090
     templateHash: abc123def456
