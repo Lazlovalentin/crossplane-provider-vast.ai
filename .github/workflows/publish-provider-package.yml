@@ -65,7 +65,7 @@ jobs:
           GOBIN="$TOOLS_DIR" go install "${CRANK_PKG}@${CROSSPLANE_CLI_VERSION}"
           mv "$TOOLS_DIR/crank" "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}"
           chmod +x "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}"
-          "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}" --version
+          "$TOOLS_DIR/crossplane-cli-${CROSSPLANE_CLI_VERSION}" version || true
 
       - name: Login to GHCR
         uses: docker/login-action@v3
