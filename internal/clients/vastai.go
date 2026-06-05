@@ -6,6 +6,7 @@ import (
 
 	"github.com/crossplane/crossplane-runtime/v2/pkg/resource"
 	"github.com/pkg/errors"
+	vastaiprovider "github.com/realnedsanders/terraform-provider-vastai/provider"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -38,6 +39,7 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 				Source:  providerSource,
 				Version: providerVersion,
 			},
+			FrameworkProvider: vastaiprovider.New(providerVersion)(),
 		}
 
 		pcSpec, err := resolveProviderConfig(ctx, client, mg)
