@@ -1,7 +1,10 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/crossplane/upjet/v2/pkg/config"
+	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
 // ExternalNameConfigs contains all external name configurations for this
@@ -43,9 +46,30 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 func ExternalNameConfigurations() config.ResourceOption {
 	return func(r *config.Resource) {
 		if e, ok := ExternalNameConfigs[r.Name]; ok {
+			e.IsNotFoundDiagnosticFn = isParseEmptyIDDiagnostic
 			r.ExternalName = e
 		}
 	}
+}
+
+// isParseEmptyIDDiagnostic recognises the
+// `Error Parsing <X> ID: Could not parse ... "" as integer` diagnostic that
+// every realnedsanders/terraform-provider-vastai Read function emits when the
+// resource has no upstream ID yet (i.e. the Crossplane external-name
+// annotation has not been set). Treating it as "resource not found" lets
+// upjet proceed to Create on the first reconcile instead of looping on a
+// fatal Observe error.
+func isParseEmptyIDDiagnostic(diags []*tfprotov6.Diagnostic) bool {
+	for _, d := range diags {
+		if d == nil || d.Severity != tfprotov6.DiagnosticSeverityError {
+			continue
+		}
+		if strings.HasPrefix(d.Summary, "Error Parsing") &&
+			strings.Contains(d.Detail, `parsing ""`) {
+			return true
+		}
+	}
+	return false
 }
 
 // ExternalNameConfigured returns the list of all resources whose external name
