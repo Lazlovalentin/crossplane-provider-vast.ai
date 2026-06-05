@@ -85,12 +85,7 @@ func main() {
 
 	zl := zap.New(zap.UseDevMode(*debug))
 	log := logging.NewLogrLogger(zl.WithName("provider-vastai"))
-	if *debug {
-		// The controller-runtime runs with a no-op logger by default. It is
-		// *very* verbose even at info level, so we only provide it a real
-		// logger when we're running in debug mode.
-		ctrl.SetLogger(zl)
-	}
+	ctrl.SetLogger(zl)
 
 	log.Debug("Starting", "sync-period", syncPeriod.String(), "poll-interval", pollInterval.String(), "max-reconcile-rate", *maxReconcileRate)
 
@@ -145,6 +140,7 @@ func main() {
 
 	metricRecorder := managed.NewMRMetricRecorder()
 	stateMetrics := statemetrics.NewMRStateMetrics()
+	operationTrackerStore := tjcontroller.NewOperationStore(log)
 
 	metrics.Registry.MustRegister(metricRecorder)
 	metrics.Registry.MustRegister(stateMetrics)
@@ -165,9 +161,10 @@ func main() {
 		Provider: config.GetProvider(),
 		// use the following WorkspaceStoreOption to enable the shared gRPC mode
 		// terraform.WithProviderRunner(terraform.NewSharedProvider(log, os.Getenv("TERRAFORM_NATIVE_PROVIDER_PATH"), terraform.WithNativeProviderArgs("-debuggable")))
-		WorkspaceStore: terraform.NewWorkspaceStore(log),
-		SetupFn:        clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
-		StartWebhooks:  *certsDir != "",
+		WorkspaceStore:        terraform.NewWorkspaceStore(log),
+		OperationTrackerStore: operationTrackerStore,
+		SetupFn:               clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
+		StartWebhooks:         *certsDir != "",
 	}
 
 	namespacedOpts := tjcontroller.Options{
@@ -186,9 +183,10 @@ func main() {
 		Provider: config.GetProviderNamespaced(),
 		// use the following WorkspaceStoreOption to enable the shared gRPC mode
 		// terraform.WithProviderRunner(terraform.NewSharedProvider(log, os.Getenv("TERRAFORM_NATIVE_PROVIDER_PATH"), terraform.WithNativeProviderArgs("-debuggable")))
-		WorkspaceStore: terraform.NewWorkspaceStore(log),
-		SetupFn:        clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
-		StartWebhooks:  *certsDir != "",
+		WorkspaceStore:        terraform.NewWorkspaceStore(log),
+		OperationTrackerStore: operationTrackerStore,
+		SetupFn:               clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
+		StartWebhooks:         *certsDir != "",
 	}
 
 	if *enableManagementPolicies {
