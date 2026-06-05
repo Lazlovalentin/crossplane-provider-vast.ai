@@ -13,6 +13,12 @@ TERRAFORM_VERSION_VALID := $(shell [ "$(TERRAFORM_VERSION)" = "`printf "$(TERRAF
 export TERRAFORM_PROVIDER_SOURCE ?= realnedsanders/vastai
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/Lazlovalentin/terraform-provider-vastai
 export TERRAFORM_PROVIDER_VERSION ?= 0.3.3
+# Schema generation pulls the provider from the public Terraform registry,
+# which only carries the upstream realnedsanders/vastai releases. The fork
+# v0.3.3 only changes runtime Read behaviour, so the schema is identical to
+# upstream v0.3.1; pin the registry-side version here to keep `make generate`
+# working without publishing the fork to the registry.
+export TERRAFORM_PROVIDER_SCHEMA_VERSION ?= 0.3.1
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-vastai
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/Lazlovalentin/terraform-provider-vastai/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-vastai_v$(TERRAFORM_PROVIDER_VERSION)
@@ -122,12 +128,12 @@ $(TERRAFORM): check-terraform-version
 	@$(OK) installing terraform $(HOSTOS)-$(HOSTARCH)
 
 $(TERRAFORM_PROVIDER_SCHEMA): $(TERRAFORM)
-	@$(INFO) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_VERSION)
+	@$(INFO) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_SCHEMA_VERSION)
 	@mkdir -p $(TERRAFORM_WORKDIR)
-	@echo '{"terraform":[{"required_providers":[{"provider":{"source":"'"$(TERRAFORM_PROVIDER_SOURCE)"'","version":"'"$(TERRAFORM_PROVIDER_VERSION)"'"}}],"required_version":"'"$(TERRAFORM_VERSION)"'"}]}' > $(TERRAFORM_WORKDIR)/main.tf.json
+	@echo '{"terraform":[{"required_providers":[{"provider":{"source":"'"$(TERRAFORM_PROVIDER_SOURCE)"'","version":"'"$(TERRAFORM_PROVIDER_SCHEMA_VERSION)"'"}}],"required_version":"'"$(TERRAFORM_VERSION)"'"}]}' > $(TERRAFORM_WORKDIR)/main.tf.json
 	@$(TERRAFORM) -chdir=$(TERRAFORM_WORKDIR) init > $(TERRAFORM_WORKDIR)/terraform-logs.txt 2>&1
 	@$(TERRAFORM) -chdir=$(TERRAFORM_WORKDIR) providers schema -json=true > $(TERRAFORM_PROVIDER_SCHEMA) 2>> $(TERRAFORM_WORKDIR)/terraform-logs.txt
-	@$(OK) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_VERSION)
+	@$(OK) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_SCHEMA_VERSION)
 
 pull-docs:
 	@if [ ! -d "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" ]; then \
