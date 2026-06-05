@@ -80,11 +80,11 @@ jobs:
       - name: Build
         env:
           VERSION: ${{ github.event.inputs.version }}
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: main
         run: make -j2 build.all
 
       - name: Publish
         env:
           VERSION: ${{ github.event.inputs.version }}
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: main
         run: make publish BRANCH_NAME="$BRANCH_NAME" VERSION="$VERSION"
